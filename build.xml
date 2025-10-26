@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<!-- ====================================================================== 
+     Jan 7, 2008 5:31:32 PM                                                        
+
+     project peeper    
+     swf reader/parser 
+                   
+     ra                                                                
+     ====================================================================== -->
+<project name="project peeper" default="build">
+    <description>
+            swf reader/parser 
+    </description>
+
+	<property name="src" location="src/"/>
+	<property name="bin" location="bin/"/>
+	<property name="tests" location="test-data/"/>
+	<property name="lib" location="lib/"/>
+	
+	<!-- CLASSPATH-->
+	<path id="project.classpath">
+		<pathelement path="${bin}"/>
+		<pathelement location="${lib}/kawa-1.9.1.jar"/>
+		<pathelement location="${lib}/kawa-builder.jar"/>
+	</path>
+
+	<!-- =================================
+			compile java
+	     ================================= -->
+	<target name="compile_java">
+		<javac srcdir="src"
+         destdir="bin"
+         debug="on" >
+			<classpath refid="project.classpath" />
+		</javac>
+	</target>
+    <!-- ================================= 
+          target: build all              
+         ================================= -->
+    <target name="build" depends="compile_java">
+        <java classname="builder.builder">
+        	<classpath refid="project.classpath" />
+        	<arg value="bin/" />
+        	<arg value="src/" />
+       	</java>
+    </target>
+	<!-- =================================
+			compile main module
+	     ================================= -->
+    <target name="compile_main" depends="build">
+    	<java classname="kawa.repl">
+    		<classpath refid="project.classpath" />
+    		<arg value="--main" />
+    		<arg line="-d ${bin}" />
+    		<arg line="-P com.nodev01.peeper." />
+    		<arg line="-C ${src}/com/nodev01/peeper/main.scm" />
+   		</java>
+    </target>
+
+</project>
